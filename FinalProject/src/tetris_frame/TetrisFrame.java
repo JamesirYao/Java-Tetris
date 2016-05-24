@@ -20,7 +20,7 @@
 //                            `=---='  
 //                         佛祖保佑 永无BUG             
 //         .............................................  
-package tetris;
+package tetris_frame;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.BorderLayout;
@@ -42,7 +42,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import mysql.LoginFrame;
+import tetris_panel.TetrisPanel;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
@@ -50,7 +50,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JMenuBar;
 
 
-public class Tetris extends JFrame implements ActionListener
+public class TetrisFrame extends JFrame implements ActionListener
 {
 	private String username;
 	
@@ -76,7 +76,7 @@ public class Tetris extends JFrame implements ActionListener
 	
 	private int bestscore;
 	
-	public Tetris(String host, String username,int bestscore) 
+	public TetrisFrame(String host, String username,int bestscore) 
 	{
 		super( "Tetris Login["+ username + "]");	  
 		this.bestscore = bestscore;
@@ -111,15 +111,6 @@ public class Tetris extends JFrame implements ActionListener
 		leaderboardItem.addActionListener(this); 
 		userMenu.add(leaderboardItem);
 		
-		/*
-		registerItem = new JMenuItem("Register");
-		registerItem.addActionListener(this); 
-		userMenu.add(registerItem);
-		loginItem = new JMenuItem("Login");
-		loginItem.addActionListener(this); 
-		userMenu.add(loginItem);
-		*/
-		
 		bar = new JMenuBar(); 	
 		bar.add( fileMenu ); 
 		bar.add(userMenu);
@@ -131,7 +122,7 @@ public class Tetris extends JFrame implements ActionListener
 	
 	public static void main( String[] args ) throws SQLException
 	{ 
-		Tetris tetrisFrame = new Tetris("localhost","1234",100); 
+		TetrisFrame tetrisFrame = new TetrisFrame("localhost","1234",100); 
 		tetrisFrame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		tetrisFrame.pack();
 		tetrisFrame.setVisible(true);
@@ -151,14 +142,14 @@ public class Tetris extends JFrame implements ActionListener
 		} else
 		if (e.getSource()==aboutItem)
 		{		
-			JOptionPane.showMessageDialog( Tetris.this,
+			JOptionPane.showMessageDialog( TetrisFrame.this,
 					"This is a Tetris game made by\nJamesir Yao and Jerry Shin",
 					"About", JOptionPane.PLAIN_MESSAGE );
 		} else
 		if (e.getSource()==helpItem)
 		{
-			JOptionPane.showMessageDialog( Tetris.this,
-					"Up for Rotate\nLeft/Right for Move\nP/Space for Pause\nPageUp/PageDown for Speed",
+			JOptionPane.showMessageDialog( TetrisFrame.this,
+					"Up for Rotate\nLeft/Right for Move\nP/Space for Pause\na/s for Speed",
 					"Keyboard Control",
 					JOptionPane.PLAIN_MESSAGE );
 		} else
@@ -186,7 +177,7 @@ public class Tetris extends JFrame implements ActionListener
 				String str = "";
 				for (int i=0;i<a;i++)
 				str = str + nameString[i] + " : "+ scoreString[i] + "\n";
-				JOptionPane.showMessageDialog( Tetris.this,
+				JOptionPane.showMessageDialog( TetrisFrame.this,
 						str,
 						"Leaderboard", JOptionPane.PLAIN_MESSAGE );
 			}

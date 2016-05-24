@@ -20,7 +20,7 @@
 //                            `=---='  
 //                         佛祖保佑 永无BUG             
 //         .............................................  
-package tetris;
+package tetris_panel;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -96,7 +96,7 @@ public class TetrisPanel extends JPanel implements Observer
 			started = true;
 		} else
 		{
-			model.reset();
+			model.gamestart();
 		}
 		
 	}

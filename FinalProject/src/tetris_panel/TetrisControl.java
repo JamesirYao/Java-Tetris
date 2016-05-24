@@ -21,7 +21,7 @@
 //                         佛祖保佑 永无BUG             
 //         .............................................  
 
-package tetris;
+package tetris_panel;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -33,7 +33,6 @@ public class TetrisControl implements KeyListener
 	public TetrisControl(TetrisModel model)
 	{	
 		this.model = model;
-		
 	}
 	
 	public void keyPressed(KeyEvent e) 
@@ -53,12 +52,10 @@ public class TetrisControl implements KeyListener
             case KeyEvent.VK_RIGHT:
             	model.move(1, 0);
                 break;
-            case KeyEvent.VK_ADD:
-            case KeyEvent.VK_PAGE_UP:
+            case KeyEvent.VK_A:
                 model.speedUp();
                 break;
-            case KeyEvent.VK_SUBTRACT:
-            case KeyEvent.VK_PAGE_DOWN:
+            case KeyEvent.VK_S:
                 model.speedDown();
                 break;
             case KeyEvent.VK_SPACE:

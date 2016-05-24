@@ -20,7 +20,7 @@
 //                            `=---='  
 //                         佛祖保佑 永无BUG             
 //         .............................................  
-package tetris;
+package tetris_panel;
 
 import javax.swing.*;
 
@@ -30,8 +30,6 @@ import java.util.Random;
 
 public class TetrisModel extends Observable implements Runnable 
 {
-	private String usernameString;
-	
 	public int maxX,maxY;
 	public int[][] map;
 	
@@ -82,17 +80,42 @@ public class TetrisModel extends Observable implements Runnable
 		this.maxY = maxY;
 		this.x = maxX/2;
 		this.y = 1;
-		reset();
+		gamestart();
 	}
 	
-	public void setUsername(String username)
+	private void playBackgroundMusic()
 	{
-		this.usernameString = username;
+		
 	}
 	
-	public void reset()
+	private void stopBackgroundMusic()
 	{
-	    timeInterval = 200;                   
+		
+	}
+	
+	private void playSoundEffect() 
+	{
+		
+	}
+
+	public void gamestart()
+	{
+	    init();
+	    renew();
+	    playBackgroundMusic();
+	}
+
+	private void gameover()
+	{
+		JOptionPane.showMessageDialog(null,"you failed",
+				"Game Over",JOptionPane.INFORMATION_MESSAGE);
+		stopBackgroundMusic();
+	}
+
+	
+	private void init()
+	{
+		timeInterval = 200;                   
 	    
 	    gameover = false;
 	    score = 0;
@@ -108,8 +131,8 @@ public class TetrisModel extends Observable implements Runnable
 	    	map[i] = new int[maxY];
 	        Arrays.fill(map[i], 0);
 	    }   
-	    renew();
 	}
+
 	
 	private int newY(int k)
 	{
@@ -133,8 +156,7 @@ public class TetrisModel extends Observable implements Runnable
 		{
 			temp = true;
 			renew();
-			JOptionPane.showMessageDialog(null,"you failed",
-					"Game Over",JOptionPane.INFORMATION_MESSAGE);
+			gameover();
 		}
 		return temp;
 	}
@@ -161,10 +183,8 @@ public class TetrisModel extends Observable implements Runnable
 
 	public void run()
 	{
-		//running = true;
 	    while (true) 
 	    {
-	    	//System.out.println("Running...");
 	    	checked = false;
 	    	sleep(timeInterval);
 	        if (!paused && !gameover) 
@@ -196,7 +216,6 @@ public class TetrisModel extends Observable implements Runnable
 	            renew();
 	        }
 	    }
-	    //running = false;
 	}
 	
 	public void speedUp() 
@@ -320,6 +339,7 @@ public class TetrisModel extends Observable implements Runnable
 					tempMap[i][j]=0;
 			}
 		}	
+		playSoundEffect();
 		flicker(k,tempMap);
 		flicker(k,tempMap); 
 		bj= false;

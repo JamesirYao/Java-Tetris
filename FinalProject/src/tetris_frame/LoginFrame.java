@@ -1,4 +1,4 @@
-package mysql;
+package tetris_frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -28,8 +28,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import tetris.Tetris;
-
 import java.sql.*;
 
 public class LoginFrame extends JFrame implements ActionListener
@@ -57,14 +55,12 @@ public class LoginFrame extends JFrame implements ActionListener
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
 	private JLabel hostLabel;
-	
-	private boolean login;
-	
+
 	private int score;
 	
 	private void work()
 	{
-		Tetris tetrisFrame = new Tetris(HOST,usernameInput,score); 
+		TetrisFrame tetrisFrame = new TetrisFrame(HOST,usernameInput,score); 
 		tetrisFrame.setLocation(500,200);
 		tetrisFrame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		tetrisFrame.pack();
@@ -77,8 +73,6 @@ public class LoginFrame extends JFrame implements ActionListener
 		super("Tetris Login");
 		
 		this.setLayout(new BorderLayout());
-		
-		login = false;
 		
 		layout = new GridBagLayout();
 	   	layout.columnWidths = new int[] {35,35,35,35};
@@ -146,7 +140,6 @@ public class LoginFrame extends JFrame implements ActionListener
 				
 				if (myRs.next()) 
 				{
-					login = true;
 					score = myRs.getInt("score");
 					System.out.println(score);
 					work();
