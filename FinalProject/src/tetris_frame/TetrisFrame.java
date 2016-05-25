@@ -42,6 +42,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import tetris_helper.TetrisMySQL;
 import tetris_panel.TetrisPanel;
 
 import javax.swing.ButtonGroup;
@@ -71,8 +72,8 @@ public class TetrisFrame extends JFrame implements ActionListener
 	private JMenuBar bar;
 	
 	private TetrisPanel tetrisPanel;
-	
-	private boolean login;
+	private TetrisMySQL mySQL;
+	//private boolean login;
 	
 	private int bestscore;
 	
@@ -82,12 +83,13 @@ public class TetrisFrame extends JFrame implements ActionListener
 		this.bestscore = bestscore;
 		this.username = username;
 		this.HOST = host;
+		mySQL = new TetrisMySQL();
 		tetrisPanel = new TetrisPanel();
 		tetrisPanel.setInformation(HOST,username,bestscore);
 		
 		this.add(tetrisPanel,BorderLayout.CENTER);
 		
-		login = false;
+		//login = false;
 		
 		fileMenu = new JMenu( "File" );
 		startItem = new JMenuItem( "New Game" ); 
@@ -122,7 +124,7 @@ public class TetrisFrame extends JFrame implements ActionListener
 	
 	public static void main( String[] args ) throws SQLException
 	{ 
-		TetrisFrame tetrisFrame = new TetrisFrame("localhost","1234",100); 
+		TetrisFrame tetrisFrame = new TetrisFrame("localhost","Default",0); 
 		tetrisFrame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		tetrisFrame.pack();
 		tetrisFrame.setVisible(true);
@@ -155,36 +157,9 @@ public class TetrisFrame extends JFrame implements ActionListener
 		} else
 		if (e.getSource()==leaderboardItem)
 		{
-			String nameString[] = new String[10];
-			String scoreString[] = new String[10];
-			Connection myConn = null;
-			Statement myStmt = null;
-			ResultSet myRs = null;
-			try {
-				myConn = DriverManager.getConnection("jdbc:mysql://"+HOST+":3306/tetris", "tetris" , "tetris");
-				System.out.println("Database connection successful!\n");
-				myStmt = myConn.createStatement();
-				myRs = myStmt.executeQuery("select * from score order by score desc");
-				int a=0;
-				while (myRs.next() && a<10) 
-				{
-					login = true;
-					nameString[a] = myRs.getString("username");
-					scoreString[a] = myRs.getString("score");
-					System.out.println(myRs.getString("username")+" "+myRs.getString("score"));
-					a++;
-				} 
-				String str = "";
-				for (int i=0;i<a;i++)
-				str = str + nameString[i] + " : "+ scoreString[i] + "\n";
-				JOptionPane.showMessageDialog( TetrisFrame.this,
-						str,
-						"Leaderboard", JOptionPane.PLAIN_MESSAGE );
-			}
-			catch (Exception exc) 
-			{
-				exc.printStackTrace();
-			}
+			JOptionPane.showMessageDialog( TetrisFrame.this,
+					mySQL.showLeaderBoard(HOST),
+					"Leaderboard", JOptionPane.PLAIN_MESSAGE );
 		} 
 		
 	}

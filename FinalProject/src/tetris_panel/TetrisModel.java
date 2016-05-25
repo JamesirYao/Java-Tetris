@@ -24,6 +24,8 @@ package tetris_panel;
 
 import javax.swing.*;
 
+import tetris_helper.TetrisPlayer;
+
 import java.util.Arrays;
 import java.util.Observable;
 import java.util.Random;
@@ -43,6 +45,10 @@ public class TetrisModel extends Observable implements Runnable
 	private int timeInterval;
 	
 	private double speedChangeRate = 0.75;              
+	
+	private TetrisPlayer player;
+	
+	
 	
 	private static final int[][][] BLOCK=
 	{
@@ -82,34 +88,19 @@ public class TetrisModel extends Observable implements Runnable
 		this.y = 1;
 		gamestart();
 	}
-	
-	private void playBackgroundMusic()
-	{
-		
-	}
-	
-	private void stopBackgroundMusic()
-	{
-		
-	}
-	
-	private void playSoundEffect() 
-	{
-		
-	}
 
 	public void gamestart()
 	{
 	    init();
 	    renew();
-	    playBackgroundMusic();
+	    player.playBackgroundMusic();
 	}
 
 	private void gameover()
 	{
 		JOptionPane.showMessageDialog(null,"you failed",
 				"Game Over",JOptionPane.INFORMATION_MESSAGE);
-		stopBackgroundMusic();
+		player.stopBackgroundMusic();
 	}
 
 	
@@ -131,6 +122,8 @@ public class TetrisModel extends Observable implements Runnable
 	    	map[i] = new int[maxY];
 	        Arrays.fill(map[i], 0);
 	    }   
+	    
+	    player = new TetrisPlayer();
 	}
 
 	
@@ -339,7 +332,7 @@ public class TetrisModel extends Observable implements Runnable
 					tempMap[i][j]=0;
 			}
 		}	
-		playSoundEffect();
+		player.playSoundEffect();
 		flicker(k,tempMap);
 		flicker(k,tempMap); 
 		bj= false;

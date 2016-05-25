@@ -39,6 +39,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import tetris_helper.TetrisMySQL;
+
 
 public class TetrisPanel extends JPanel implements Observer 
 {
@@ -60,6 +62,7 @@ public class TetrisPanel extends JPanel implements Observer
 	private boolean started;
 	private Thread game;
 	
+	private TetrisMySQL mySQL;
 	public TetrisPanel()
 	{
 		super();
@@ -106,7 +109,7 @@ public class TetrisPanel extends JPanel implements Observer
 		this.HOST = host;
 		this.username = username;
 		this.bestscore = bestscore;
-		
+		mySQL = new TetrisMySQL();
 		System.out.println(bestscore);
 	}
 	
@@ -209,20 +212,8 @@ public class TetrisPanel extends JPanel implements Observer
 	{
 		if (model.getScore()>bestscore) 
 		{
-			Connection myConn = null;
-			Statement myStmt = null;
-			ResultSet myRs = null;
+			mySQL.updateScore(HOST, username, model.getScore());
 			bestscore = model.getScore();
-			try {
-				myConn = DriverManager.getConnection("jdbc:mysql://"+HOST+":3306/tetris", "tetris" , "tetris");
-				System.out.println("Database connection successful!\n");
-				myStmt = myConn.createStatement();
-				myStmt.executeUpdate("update score set score='"+bestscore+"' where username = '"+username+"';");
-			}
-			catch (Exception exc) 
-			{
-				exc.printStackTrace();
-			}
 		}
 		String s = "Best: "+ bestscore +"  Score: " + model.getScore();
 	    labelScore.setText(s);

@@ -1,3 +1,25 @@
+//                         Tetris Game By 
+//                    Jamesir Yao and Jerry Shin
+//                            _ooOoo_  
+//                           o8888888o  
+//                           88" . "88  
+//                           (| -_- |)  
+//                            O\ = /O  
+//                        ____/`---'\____  
+//                      .   ' \\| |// `.  
+//                       / \\||| : |||// \  
+//                     / _||||| -:- |||||- \  
+//                       | | \\\ - /// | |  
+//                     | \_| ''\---/'' | |  
+//                      \ .-\__ `-` ___/-. /  
+//                   ___`. .' /--.--\ `. . __  
+//                ."" '< `.___\_<|>_/___.' >'"".  
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |  
+//                 \ \ `-. \_ __\ /__ _/ .-` / /  
+//         ======`-.____`-.___\_____/___.-`____.-'======  
+//                            `=---='  
+//                         佛祖保佑 永无BUG             
+//         .............................................  
 package tetris_frame;
 
 import java.awt.BorderLayout;
@@ -27,6 +49,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import tetris_helper.TetrisMySQL;
 
 import java.sql.*;
 
@@ -58,6 +82,7 @@ public class LoginFrame extends JFrame implements ActionListener
 
 	private int score;
 	
+	private TetrisMySQL mySQL;
 	private void work()
 	{
 		TetrisFrame tetrisFrame = new TetrisFrame(HOST,usernameInput,score); 
@@ -73,6 +98,7 @@ public class LoginFrame extends JFrame implements ActionListener
 		super("Tetris Login");
 		
 		this.setLayout(new BorderLayout());
+		mySQL = new TetrisMySQL();
 		
 		layout = new GridBagLayout();
 	   	layout.columnWidths = new int[] {35,35,35,35};
@@ -130,48 +156,35 @@ public class LoginFrame extends JFrame implements ActionListener
 		
 		if (e.getSource() == btn) 
 		{
-			
-			try {
-				myConn = DriverManager.getConnection("jdbc:mysql://"+HOST+":3306/tetris", "tetris" , "tetris");
-				System.out.println("Database connection successful!\n");
-				myStmt = myConn.createStatement();
-				myRs = myStmt.executeQuery("select * from score where username = '"+usernameInput+
-						"' and password = '" + passwordInput + "'");
-				
-				if (myRs.next()) 
-				{
-					score = myRs.getInt("score");
-					System.out.println(score);
-					work();
-					this.setVisible(false);
-				} else
-				{
-					JOptionPane.showMessageDialog(LoginFrame.this,
-							"Wrong Username/Password!",
-							"Error",
-							JOptionPane.PLAIN_MESSAGE );
-				}
-			}
-			catch (Exception exc) 
+			int temp = mySQL.login(HOST, usernameInput, passwordInput);
+			if (temp>=0)
 			{
-				exc.printStackTrace();
+				score = temp;
+				work();
+				this.setVisible(false);
+			} else
+			{
+				JOptionPane.showMessageDialog(LoginFrame.this,
+						"Wrong Username/Password!",
+						"Error",
+						JOptionPane.PLAIN_MESSAGE );
 			}
+			
 		} else
 		if (e.getSource() == btn2) 
 		{
-			try {
-				myConn = DriverManager.getConnection("jdbc:mysql://"+HOST+":3306/tetris", "tetris" , "tetris");
-				System.out.println("Database connection successful!\n");
-				myStmt = myConn.createStatement();
-				myStmt.executeUpdate("insert into tetris.score value('"+usernameInput+"','"+passwordInput+"','0');");
+			if (mySQL.register(HOST, usernameInput, passwordInput))
+			{
 				JOptionPane.showMessageDialog(LoginFrame.this,
 						"Succeed!",
 						"Succeed",
 						JOptionPane.PLAIN_MESSAGE );
-			}
-			catch (Exception exc) 
+			} else
 			{
-				exc.printStackTrace();
+				JOptionPane.showMessageDialog(LoginFrame.this,
+						"Register Failed!",
+						"Error",
+						JOptionPane.PLAIN_MESSAGE );
 			}
 		}
 	}
