@@ -22,34 +22,27 @@
 //         .............................................  
 package tetris_helper;
 
-import java.applet.AudioClip;
 
-import javax.swing.JApplet;
-
-
-
-public class TetrisPlayer extends JApplet
+public class TetrisPlayer
 {
 	static private final String BACKGROUNDMUSIC = "welcome.wav";
 	static private final String SOUNDEFFECT = "se.mp3";
-	private AudioClip sound1,currentSound;  
 	public TetrisPlayer()	
 	{
-		currentSound = getAudioClip(null," hi.au" );
-		
+		//currentSound = getAudioClip(null,"hi.au" );
+		///playBackgroundMusic(); 
 		 
 	}
 	
 	public void playBackgroundMusic()
 	{
-		
-		currentSound.play();// ...
-		currentSound.loop();
+		//currentSound.play();// ...
+		//currentSound.loop();
 	}
 	
 	public void stopBackgroundMusic()
 	{
-	      currentSound.stop(); // ...
+	      //currentSound.stop(); // ...
 	}
 	
 	public void playSoundEffect() 

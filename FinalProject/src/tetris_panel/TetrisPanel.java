@@ -25,15 +25,14 @@ package tetris_panel;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Graphics;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Properties;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -51,11 +50,10 @@ public class TetrisPanel extends JPanel implements Observer
 	private TetrisControl control = null;
 	private TetrisModel model = null;
 
-	private JFrame mainFrame;
 	private Canvas paintCanvas;
 	private JLabel labelScore;
-	private static final int nodeWidth = 21;
-	private static final int nodeHeight = 21;
+	private static final int nodeWidth = 26;
+	private static final int nodeHeight = 26;
 	private int canvasWidth ;
 	private int canvasHeight ;
 	
@@ -68,7 +66,6 @@ public class TetrisPanel extends JPanel implements Observer
 		super();
 		this.setLayout(new BorderLayout());
 		started = false;
-		
 		model = new TetrisModel(11, 19);
 		model.addObserver(this);
 		control = new TetrisControl(model);
@@ -78,8 +75,19 @@ public class TetrisPanel extends JPanel implements Observer
 	    labelScore.setHorizontalAlignment(SwingConstants.CENTER);
 	    this.add(labelScore, BorderLayout.NORTH);
 
-	    canvasWidth = (model.maxX+1) * nodeWidth ;
-	    canvasHeight = (model.maxY+1) * nodeWidth ;
+	    Properties prop = System.getProperties();
+		String os = prop.getProperty("os.name");
+		System.out.println(os);
+		if (os.contains("Mac"))
+		{
+			canvasWidth = (model.maxX+1) * nodeWidth ;
+			canvasHeight = (model.maxY+1) * nodeWidth ;
+		} else 
+		if (os.contains("Windows"))
+		{
+			canvasWidth = (model.maxX) * nodeWidth + 10;
+			canvasHeight = (model.maxY) * nodeWidth + 10;
+		}
 	    
 	    paintCanvas = new Canvas();
 	    paintCanvas.setSize(canvasWidth, canvasHeight);
@@ -178,16 +186,16 @@ public class TetrisPanel extends JPanel implements Observer
 		switch(kind)
 		{
 			case 1: case 2:
-				c = Color.magenta;
+				c = Color.MAGENTA;
 				break;
 			case 3: case 4: case 5: case 6:
-				c = Color.red;
+				c = Color.RED;
 				break;
 			case 7: case 8: case 9: case 10:
-				c = Color.yellow;
+				c = Color.YELLOW;
 				break;
 			case 11: case 12: case 13: case 14:
-				c = Color.orange;
+				c = Color.ORANGE;
 				break;
 			case 15:
 				c = Color.PINK;
@@ -205,7 +213,10 @@ public class TetrisPanel extends JPanel implements Observer
 	private void drawNode(Graphics g,int x,int y) 
 	{
 		if ((g.getColor()==Color.darkGray)||(y>0))
-		g.fillRoundRect(x * nodeWidth,y * nodeHeight,nodeWidth - 1,nodeHeight - 1,4,4);
+		{
+			g.fillRoundRect(x * nodeWidth,y * nodeHeight,nodeWidth - 1,nodeHeight - 1,7,7);
+		}
+		
 	}
 
 	public void updateScore() 
@@ -215,7 +226,7 @@ public class TetrisPanel extends JPanel implements Observer
 			mySQL.updateScore(HOST, username, model.getScore());
 			bestscore = model.getScore();
 		}
-		String s = "Best: "+ bestscore +"  Score: " + model.getScore();
+		String s = "User: "+username+" Best: "+ bestscore +"  Score: " + model.getScore();
 	    labelScore.setText(s);
 	}
 

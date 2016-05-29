@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -53,6 +54,7 @@ import javax.swing.JTextField;
 import tetris_helper.TetrisMySQL;
 
 import java.sql.*;
+import java.util.Properties;
 
 public class LoginFrame extends JFrame implements ActionListener
 {
@@ -93,12 +95,14 @@ public class LoginFrame extends JFrame implements ActionListener
 		tetrisFrame.setResizable(false);
 	}
 	
-	public LoginFrame() throws SQLException 
+	public LoginFrame() throws IOException 
 	{
-		super("Tetris Login");
+		super("Login");
 		
 		this.setLayout(new BorderLayout());
 		mySQL = new TetrisMySQL();
+		
+		this.setIconImage(this.getToolkit().getImage(getClass().getResource("icon.png"))); 
 		
 		layout = new GridBagLayout();
 	   	layout.columnWidths = new int[] {35,35,35,35};
@@ -108,6 +112,39 @@ public class LoginFrame extends JFrame implements ActionListener
 		gbc = new GridBagConstraints();
 		gbc.fill =GridBagConstraints.BOTH;
    		gbc.insets = new Insets(2,2,2,2);
+   		
+   		HOST = "";
+   		usernameInput = "";
+   		passwordInput = "";
+   		File file = new File("UserDefault.txt");
+   		try
+   		{
+   			FileReader in = new FileReader(file);
+   			char byt[] = new char[10000];
+   			int length = in.read(byt);
+   			int temp=0;
+   			for (int i=0;i<length;i++)
+   			if (byt[i]!='\n')
+   			{
+   				HOST += byt[i];
+   			} else 
+   			{
+   				temp = i;
+   				break;
+   			}
+   			
+   			for (int i=temp+1;i<length;i++)
+   	   		if (byt[i]!='\n')
+   	   		{
+   	   			usernameInput += byt[i];
+   	   		}
+   			
+   			
+   			in.close();
+   		}catch (Exception e1)
+   		{
+   			e1.printStackTrace();
+   		}
    		
    		setGBC(0,3,2,1);
    		btn = new JButton("Login");
@@ -128,7 +165,7 @@ public class LoginFrame extends JFrame implements ActionListener
 		shapePanel.add(hostLabel,gbc);
 		
 		setGBC(1,1,3,1);
-		username= new JTextField();
+		username= new JTextField(usernameInput);
 		shapePanel.add(username,gbc);
 		
 		setGBC(0,1,1,1);
@@ -198,11 +235,11 @@ public class LoginFrame extends JFrame implements ActionListener
 		gbc.gridheight = height;
 	}
 	
-	public static void main(String[] args) throws SQLException 
+	public static void main(String[] args) throws SQLException, IOException 
 	{
 			LoginFrame loginFrame = new LoginFrame();
 			loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			loginFrame.setSize(220, 150);
+			loginFrame.setSize(220, 170);
 			loginFrame.setResizable(false);
 			loginFrame.setLocationRelativeTo(null);
 			loginFrame.setVisible(true);

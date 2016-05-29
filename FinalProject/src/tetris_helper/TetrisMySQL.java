@@ -1,5 +1,31 @@
+//                         Tetris Game By 
+//                    Jamesir Yao and Jerry Shin
+//                            _ooOoo_  
+//                           o8888888o  
+//                           88" . "88  
+//                           (| -_- |)  
+//                            O\ = /O  
+//                        ____/`---'\____  
+//                      .   ' \\| |// `.  
+//                       / \\||| : |||// \  
+//                     / _||||| -:- |||||- \  
+//                       | | \\\ - /// | |  
+//                     | \_| ''\---/'' | |  
+//                      \ .-\__ `-` ___/-. /  
+//                   ___`. .' /--.--\ `. . __  
+//                ."" '< `.___\_<|>_/___.' >'"".  
+//               | | : `- \`.;`\ _ /`;.`/ - ` : | |  
+//                 \ \ `-. \_ __\ /__ _/ .-` / /  
+//         ======`-.____`-.___\_____/___.-`____.-'======  
+//                            `=---='  
+//                         佛祖保佑 永无BUG             
+//         .............................................  
+
 package tetris_helper;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -24,14 +50,26 @@ public class TetrisMySQL
 		ResultSet myRs = null;
 		try {
 			myConn = DriverManager.getConnection("jdbc:mysql://"+HOST+":3306/tetris", "tetris" , "tetris");
-			System.out.println("Database connection successful!\n");
+			System.out.println("Database connection successful!(login)\n");
 			myStmt = myConn.createStatement();
-			myRs = myStmt.executeQuery("select * from score where username = '"+username+
-					"' and password = '" + password + "'");
+			myRs = myStmt.executeQuery("select * from score where binary username = '"+username+
+					"' and binary password = '" + password + "'");
 			
 			if (myRs.next()) 
 			{
 				int score = myRs.getInt("score");
+				
+				File file = new File("UserDefault.txt");
+		   		try
+		   		{
+		   			FileWriter out = new FileWriter(file);
+		   			String str = HOST + "\n" + username + "\n";
+		   			out.write(str);
+		   			out.close();
+		   		}catch (Exception e1)
+		   		{
+		   			e1.printStackTrace();
+		   		}
 				return score;
 			} else
 			{
@@ -52,7 +90,7 @@ public class TetrisMySQL
 		ResultSet myRs = null;
 		try {
 			myConn = DriverManager.getConnection("jdbc:mysql://"+HOST+":3306/tetris", "tetris" , "tetris");
-			System.out.println("Database connection successful!\n");
+			System.out.println("Database connection successful!(register)\n");
 			myStmt = myConn.createStatement();
 			myStmt.executeUpdate("insert into tetris.score value('"+username+"','"+password+"','0');");
 			return true;
@@ -73,7 +111,7 @@ public class TetrisMySQL
 		String scoreString[] = new String[10];
 		try {
 			myConn = DriverManager.getConnection("jdbc:mysql://"+HOST+":3306/tetris", "tetris" , "tetris");
-			System.out.println("Database connection successful!\n");
+			System.out.println("Database connection successful!(showLeaderBoard)\n");
 			myStmt = myConn.createStatement();
 			myRs = myStmt.executeQuery("select * from score order by score desc");
 			int a=0;
@@ -103,9 +141,9 @@ public class TetrisMySQL
 		ResultSet myRs = null;
 		try {
 			myConn = DriverManager.getConnection("jdbc:mysql://"+HOST+":3306/tetris", "tetris" , "tetris");
-			System.out.println("Database connection successful!\n");
+			System.out.println("Database connection successful!(updateScore)\n");
 			myStmt = myConn.createStatement();
-			myStmt.executeUpdate("update score set score='"+bestscore+"' where username = '"+username+"';");
+			myStmt.executeUpdate("update score set score='"+bestscore+"' where binary username = '"+username+"';");
 		}
 		catch (Exception exc) 
 		{

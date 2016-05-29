@@ -79,7 +79,10 @@ public class TetrisFrame extends JFrame implements ActionListener
 	
 	public TetrisFrame(String host, String username,int bestscore) 
 	{
-		super( "Tetris Login["+ username + "]");	  
+		super( "Tetris Login["+ username + "]");	
+		
+		this.setIconImage(this.getToolkit().getImage(getClass().getResource("icon.png"))); 
+		
 		this.bestscore = bestscore;
 		this.username = username;
 		this.HOST = host;
